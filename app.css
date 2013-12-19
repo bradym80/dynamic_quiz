@@ -109,6 +109,10 @@ input {
   vertical-align: -28%;
 }
 
+label {
+  display: block;
+}
+
 #statistics {
   width: 500px;
   margin: auto;

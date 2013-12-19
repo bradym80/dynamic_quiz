@@ -72,9 +72,6 @@ $(document).ready(function(){
         
         var question_choices = document.createTextNode(questions[count].choices[i]);
         generated_label.appendChild(question_choices);
-
-        // jQuery
-        //question.appendChild('<label><input type="radio" name="choice" value="'+ i +'"> '+ questions[count].choices[i] +'</label><br>');
       }
     } else {
       remove_all_childnodes(question);
