@@ -18,6 +18,7 @@ $(document).ready(function(){
       totalMissed   = 0,
       totalCorrect  = 0,
       question     = document.getElementById('question'),
+      back         = document.getElementById('back'),
       next         = document.getElementById('next'),
       score        = document.getElementById('score'),
       progress     = $('.progress'),
@@ -27,6 +28,7 @@ $(document).ready(function(){
   // Click Start to start quiz
   function beginning() {
     question.style.display = 'none';
+    back.style.display = 'none';
     next.style.display = 'none';
     reset.style.display = 'none';
     score.style.display = 'none';
@@ -37,6 +39,7 @@ $(document).ready(function(){
       var start_page = document.getElementById('start_page');
       start_page.style.display = 'none';
       question.style.display = 'block';
+      back.style.display = 'block';
       next.style.display = 'block';
       score.style.display = 'block';
       progress.show();
@@ -90,7 +93,7 @@ $(document).ready(function(){
   // Evaluate answer once NEXT button is clicked
   // Update progress bar and score
   function evaluate_answer(){
-    next.onclick = function(){
+    function answer_and_score(){
       var answer;
       for(var i = 0; i < 3; i++) {
         if (document.getElementsByName('choice')[i].checked) {
@@ -144,7 +147,19 @@ $(document).ready(function(){
         $('.progress-bar-danger').attr('style', 'width: '+percentageMissed+'%');
         generate_question();
       }
-    };  
+    };
+
+    //Click NEXT or Hit Enter key to proceed
+    next.onclick = function(){
+      answer_and_score();
+    };
+
+    window.onkeyup = function(e){
+      if (e.keyCode == 13) {
+        answer_and_score();
+      }
+    }      
+
   }
 
   // Restart the quiz
@@ -153,16 +168,6 @@ $(document).ready(function(){
       location.reload(true);
     };
   }
-
-  // User can hit ENTER instead of clicking NEXT
-  $(document).keyup(function(event){
-    if(event.keyCode == 13){
-      event.preventDefault();
-      next.onclick = function(){
-        evaluate_answer();
-      };
-    }
-  });
 
   // Quiz initiation
   beginning();
