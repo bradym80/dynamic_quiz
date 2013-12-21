@@ -24,6 +24,7 @@ $(document).ready(function(){
       notification = document.getElementById('notification'),
       reset        = document.getElementById('reset');
 
+  // Hide questions and related stuff initially
   question.style.display = 'none';
   back.style.display = 'none';
   next.style.display = 'none';
@@ -31,59 +32,8 @@ $(document).ready(function(){
   score.style.display = 'none';
   progress.hide();
 
-  function read_questions_from_JSON(){
-    // $.getJSON('questions.json', function(json) {
-    //   console.log(json.questions);
-    // });
-
-    // $.ajax({
-    //   type: 'GET',
-    //   url: '/questions.json',
-    //   dataType: 'json',
-    //   crossDomain: true,
-    //   success: function(data) {
-    //     questions = data.questions;
-    //     beginning();
-    //     generate_question();
-    //     evaluate_answer();
-    //     previous_question();
-    //   },
-    //   error: function(){
-    //     alert('Damnnnn... An error occured, try again!');
-    //   }
-    // });
- 
-    // var newsURL = "questions.json";
-    // var xmlhttp;
-
-    // if (window.XMLHttpRequest) {
-    //     // code for IE7+, Firefox, Chrome, Opera, Safari
-    //     xmlhttp = new XMLHttpRequest();
-    // } else {
-    //     // code for IE6, IE5
-    //     xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-    // }
-    // xmlhttp.onreadystatechange = function() {
-    //     if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-    //         response = JSON.parse(xmlhttp.responseText);
-    //         questions = response;
-    //         console.log(questions);
-    //     }
-    // }
-    // xmlhttp.open("GET", newsURL, true);
-    // xmlhttp.send();
-  }
-  //read_questions_from_JSON();
-
-  // Click Start to start quiz
+  // Start quiz once start button is clicked
   function beginning() {
-    // question.style.display = 'none';
-    // back.style.display = 'none';
-    // next.style.display = 'none';
-    // reset.style.display = 'none';
-    // score.style.display = 'none';
-    // progress.hide();
-
     var start_button = document.getElementById('start');
     start_button.onclick = function(e){
       e.preventDefault;
@@ -91,6 +41,7 @@ $(document).ready(function(){
     };
   }
 
+  // Check if the username is empty
   function check_the_input(str) {
     return str.replace(/^\s+|\s+$/g,'');
   } 
@@ -114,7 +65,7 @@ $(document).ready(function(){
       score.style.display = 'block';
       progress.show();
     } else {
-      alert('Enter your name or ');
+      alert('Enter your name');
     }
   }
 
@@ -129,9 +80,11 @@ $(document).ready(function(){
     }    
   }
 
+  // update and save the user's answer
   function storeAnswer(){
     for(var i = 0; i < 3; i++) {
       if (document.getElementsByName('choice')[i].checked) {
+        // if already answered, update the answer (when go back)
         if (answer[count] !== undefined) {
           answer.splice(count, 1, document.getElementsByName('choice')[i].value);
         } else {
@@ -148,6 +101,7 @@ $(document).ready(function(){
       var text_q = document.createTextNode(questions[count].q);
       generated_q.appendChild(text_q);
       question.appendChild(generated_q);
+
       for(var i =0; i < 3; i++) { 
         var generated_label = document.createElement('label');
         var generated_input = document.createElement('input');
@@ -160,6 +114,8 @@ $(document).ready(function(){
         var question_choices = document.createTextNode(questions[count].choices[i]);
         generated_label.appendChild(question_choices);
       }
+
+      // When go back a question, also adjust progress bar and total score
       if (answer[count]) {
         var num = parseInt(answer[count]);
         var answerChoice = document.getElementsByName('choice')[num];
@@ -172,6 +128,7 @@ $(document).ready(function(){
           update_missed_progress_bar();
         }
       }
+
     } else {
       remove_all_childnodes(question);
       remove_all_childnodes(score);
@@ -187,29 +144,30 @@ $(document).ready(function(){
     }
   }
 
+  // Update progress bar for correct answer
   function update_correct_progress_bar(){
     var percentage = (totalCorrect / questions.length)*100;
     $('.progress-bar-success').attr('style', 'width: '+percentage+'%');
   }
 
+  // Update rogress bar for wrong answer
   function update_missed_progress_bar(){
     var percentageMissed = (totalMissed / questions.length)*100;
     $('.progress-bar-danger').attr('style', 'width: '+percentageMissed+'%');
   }
 
   // Evaluate answer and scores once NEXT button is clicked
-  // Update progress bar and score
   function answer_and_score(){
     storeAnswer();
     remove_all_childnodes(notification);
-    
+    // When user did not choose any answer
     if (answer[count] === undefined){
       var notification_tag = document.createElement('p');
       var notification_text = document.createTextNode('Choose one');
       notification_tag.appendChild(notification_text);
       notification.appendChild(notification_tag);
-
-    } else if (parseInt(answer[count]) === questions[count].answer) {
+    } // When the answer is correct
+    else if (parseInt(answer[count]) === questions[count].answer) {
       var notification_tag = document.createElement('p');
       var notification_text = document.createTextNode('Correct!');
       notification_tag.appendChild(notification_text);
@@ -227,7 +185,8 @@ $(document).ready(function(){
       update_correct_progress_bar();
       generate_question();
 
-    } else {
+    } // When missed the answer
+    else {
       var notification_tag = document.createElement('p');
       var notification_text = document.createTextNode('Wrong!');
       notification_tag.appendChild(notification_text);
