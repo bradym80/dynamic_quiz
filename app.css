@@ -60,6 +60,11 @@ p {
   display: block;
   text-align: center;
   margin: auto;
+  border-radius: 10px;
+}
+
+#username:focus {
+  outline: 0;
 }
 
 button#start {

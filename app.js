@@ -1,14 +1,14 @@
 var questions = [
-        {q: "What is the capital of Japan?",     choices: ["Osaka", "Tokyo", "Kyoto"],         answer: 1},
-        {q: "What is the capital of Australia?", choices: ["Sydney", "Melbourne", "Canberra"], answer: 2},
-        {q: "What is the capital of Slovakia?",  choices: ["Bratislava", "Kosice", "Nitra"],   answer: 0},
-        {q: "What is the capital of Belarus?",   choices: ["Homyel", "Minsk", "Mogilev"],      answer: 1},
-        {q: "What is the capital of Zambia?",    choices: ["Ndola", "Kitwe", "Lusaka"],        answer: 2},
-        {q: "What is the capital of Eritrea?",   choices: ["Asmara", "Keren", "Teseney"],            answer: 0},
-        {q: "What is the capital of Namibia?",   choices: ["Tsumeb", "Swakopmund", "Windhoek"],      answer: 2},
-        {q: "What is the capital of Guyana?",    choices: ["Linden", "Georgetown", "New Amsterdam"], answer: 1},
-        {q: "What is the capital of Azerbaijan?", choices: ["Ganja", "Sumgait", "Baku"],              answer: 2},
-        {q: "What is the capital of Slovenia?",  choices: ["Ljubljana", "Maribor", "Celje"],         answer: 0}
+      {q: "What is the capital of Japan?",     choices: ["Osaka", "Tokyo", "Kyoto"],         answer: 1},
+      {q: "What is the capital of Australia?", choices: ["Sydney", "Melbourne", "Canberra"], answer: 2},
+      {q: "What is the capital of Slovakia?",  choices: ["Bratislava", "Kosice", "Nitra"],   answer: 0},
+      {q: "What is the capital of Belarus?",   choices: ["Homyel", "Minsk", "Mogilev"],      answer: 1},
+      {q: "What is the capital of Zambia?",    choices: ["Ndola", "Kitwe", "Lusaka"],        answer: 2},
+      {q: "What is the capital of Eritrea?",   choices: ["Asmara", "Keren", "Teseney"],            answer: 0},
+      {q: "What is the capital of Namibia?",   choices: ["Tsumeb", "Swakopmund", "Windhoek"],      answer: 2},
+      {q: "What is the capital of Guyana?",    choices: ["Linden", "Georgetown", "New Amsterdam"], answer: 1},
+      {q: "What is the capital of Azerbaijan?", choices: ["Ganja", "Sumgait", "Baku"],              answer: 2},
+      {q: "What is the capital of Slovenia?",  choices: ["Ljubljana", "Maribor", "Celje"],         answer: 0}
     ];
 $(document).ready(function(){ 
   var count         = 0,
@@ -172,6 +172,7 @@ $(document).ready(function(){
       var notification_text = document.createTextNode('Correct!');
       notification_tag.appendChild(notification_text);
       notification.appendChild(notification_tag);
+      $('#notification').children().fadeOut(1500);
 
       remove_all_childnodes(question);
       remove_all_childnodes(score);
@@ -184,13 +185,13 @@ $(document).ready(function(){
       count++;
       update_correct_progress_bar();
       generate_question();
-
     } // When missed the answer
     else {
       var notification_tag = document.createElement('p');
       var notification_text = document.createTextNode('Wrong!');
       notification_tag.appendChild(notification_text);
       notification.appendChild(notification_tag);
+      $('#notification').children().fadeOut(1500);
 
       remove_all_childnodes(question);
       remove_all_childnodes(score);
