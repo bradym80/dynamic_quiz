@@ -15,6 +15,7 @@ var questions = [
 $(document).ready(function(){ 
  
   var count         = 0,
+      answer        = new Array(10),
       totalMissed   = 0,
       totalCorrect  = 0,
       question     = document.getElementById('question'),
@@ -34,6 +35,7 @@ $(document).ready(function(){
     score.style.display = 'none';
     progress.hide();
     var start_button = document.getElementById('start');
+
     start_button.onclick = function(e){
       e.preventDefault;
       var start_page = document.getElementById('start_page');
@@ -57,6 +59,18 @@ $(document).ready(function(){
     }    
   }
 
+  function storeAnswer(){
+    for(var i = 0; i < 3; i++) {
+      if (document.getElementsByName('choice')[i].checked) {
+        if (answer[count] !== undefined) {
+          answer.splice(count, 1, document.getElementsByName('choice')[i].value);
+        } else {
+          answer.splice(count, 0, document.getElementsByName('choice')[i].value);
+        }
+      }
+    }
+  }
+
   // Generate question & score
   function generate_question(){
     if (count < questions.length) {
@@ -76,10 +90,23 @@ $(document).ready(function(){
         var question_choices = document.createTextNode(questions[count].choices[i]);
         generated_label.appendChild(question_choices);
       }
+      if (answer[count]) {
+        var num = parseInt(answer[count]);
+        var answerChoice = document.getElementsByTagName('input')[num];
+        answerChoice.checked = "checked";
+        if (parseInt(answer[count]) === questions[count].answer) {
+          totalCorrect--;
+          update_correct_progress_bar();
+        } else {
+          totalMissed--;
+          update_missed_progress_bar();
+        }
+      }
     } else {
       remove_all_childnodes(question);
       remove_all_childnodes(score);
       next.style.display='none';
+      back.style.display='none';
       reset.style.display = 'block';
       remove_all_childnodes(notification);
       var final_score_tag = document.createElement('p');
@@ -90,66 +117,68 @@ $(document).ready(function(){
     }
   }
 
-  // Evaluate answer once NEXT button is clicked
+  function update_correct_progress_bar(){
+    var percentage = (totalCorrect / questions.length)*100;
+    $('.progress-bar-success').attr('style', 'width: '+percentage+'%');
+  }
+
+  function update_missed_progress_bar(){
+    var percentageMissed = (totalMissed / questions.length)*100;
+    $('.progress-bar-danger').attr('style', 'width: '+percentageMissed+'%');
+  }
+
+  // Evaluate answer and scores once NEXT button is clicked
   // Update progress bar and score
+  function answer_and_score(){
+    storeAnswer();
+    remove_all_childnodes(notification);
+    
+    if (answer[count] === undefined){
+      var notification_tag = document.createElement('p');
+      var notification_text = document.createTextNode('Choose one');
+      notification_tag.appendChild(notification_text);
+      notification.appendChild(notification_tag);
+
+    } else if (parseInt(answer[count]) === questions[count].answer) {
+      var notification_tag = document.createElement('p');
+      var notification_text = document.createTextNode('Correct!');
+      notification_tag.appendChild(notification_text);
+      notification.appendChild(notification_tag);
+
+      remove_all_childnodes(question);
+      remove_all_childnodes(score);
+      totalCorrect++;
+      var score_tag = document.createElement('p');
+      var score_text = document.createTextNode('Score: '+totalCorrect+' / '+questions.length);
+      score_tag.appendChild(score_text);
+      score.appendChild(score_tag);
+
+      count++;
+      update_correct_progress_bar();
+      generate_question();
+
+    } else {
+      var notification_tag = document.createElement('p');
+      var notification_text = document.createTextNode('Wrong!');
+      notification_tag.appendChild(notification_text);
+      notification.appendChild(notification_tag);
+
+      remove_all_childnodes(question);
+      remove_all_childnodes(score);
+      var score_tag = document.createElement('p');
+      var score_text = document.createTextNode('Score: '+totalCorrect+' / '+questions.length);
+      score_tag.appendChild(score_text);
+      score.appendChild(score_tag);
+
+      count++;
+      totalMissed++;
+      update_missed_progress_bar();
+      generate_question();
+    }
+  };
+
+  //Click NEXT or Hit Enter key to proceed
   function evaluate_answer(){
-    function answer_and_score(){
-      var answer;
-      for(var i = 0; i < 3; i++) {
-        if (document.getElementsByName('choice')[i].checked) {
-          answer = document.getElementsByName('choice')[i].value;
-        }
-      }
-
-      remove_all_childnodes(notification);
-      
-      if (answer === undefined){
-        var notification_tag = document.createElement('p');
-        var notification_text = document.createTextNode('Choose one');
-        notification_tag.appendChild(notification_text);
-        notification.appendChild(notification_tag);
-
-      } else if (parseInt(answer) === questions[count].answer) {
-        var notification_tag = document.createElement('p');
-        var notification_text = document.createTextNode('Correct!');
-        notification_tag.appendChild(notification_text);
-        notification.appendChild(notification_tag);
-
-        remove_all_childnodes(question);
-        remove_all_childnodes(score);
-        totalCorrect++;
-        var score_tag = document.createElement('p');
-        var score_text = document.createTextNode('Score: '+totalCorrect+' / '+questions.length);
-        score_tag.appendChild(score_text);
-        score.appendChild(score_tag);
-
-        count++;
-        var percentage = (totalCorrect / questions.length)*100;
-        $('.progress-bar-success').attr('style', 'width: '+percentage+'%');
-        generate_question();
-
-      } else {
-        var notification_tag = document.createElement('p');
-        var notification_text = document.createTextNode('Wrong!');
-        notification_tag.appendChild(notification_text);
-        notification.appendChild(notification_tag);
-
-        remove_all_childnodes(question);
-        remove_all_childnodes(score);
-        var score_tag = document.createElement('p');
-        var score_text = document.createTextNode('Score: '+totalCorrect+' / '+questions.length);
-        score_tag.appendChild(score_text);
-        score.appendChild(score_tag);
-
-        count++;
-        totalMissed++;
-        var percentageMissed = (totalMissed / questions.length)*100;
-        $('.progress-bar-danger').attr('style', 'width: '+percentageMissed+'%');
-        generate_question();
-      }
-    };
-
-    //Click NEXT or Hit Enter key to proceed
     next.onclick = function(){
       answer_and_score();
     };
@@ -159,7 +188,18 @@ $(document).ready(function(){
         answer_and_score();
       }
     }      
+  }
 
+  // Go back to previous question
+  function previous_question(){
+    back.onclick = function(){
+      if (count >= 1) {
+        count--;
+        remove_all_childnodes(question);
+        remove_all_childnodes(score);
+        generate_question();
+      }
+    }
   }
 
   // Restart the quiz
@@ -173,5 +213,6 @@ $(document).ready(function(){
   beginning();
   generate_question();
   evaluate_answer();
+  previous_question();
 
 });
