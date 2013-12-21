@@ -10,6 +10,7 @@ var questions = [
       {q: "What is the capital of Azerbaijan?", choices: ["Ganja", "Sumgait", "Baku"],              answer: 2},
       {q: "What is the capital of Slovenia?",  choices: ["Ljubljana", "Maribor", "Celje"],         answer: 0}
     ];
+
 $(document).ready(function(){ 
   var count         = 0,
       answer        = new Array(10),
@@ -19,9 +20,9 @@ $(document).ready(function(){
       question     = document.getElementById('question'),
       back         = document.getElementById('back'),
       next         = document.getElementById('next'),
-      score        = document.getElementById('score'),
       progress     = $('.progress'),
       notification = document.getElementById('notification'),
+      counter      = document.getElementById('counter'),
       reset        = document.getElementById('reset');
 
   // Hide questions and related stuff initially
@@ -29,8 +30,8 @@ $(document).ready(function(){
   back.style.display = 'none';
   next.style.display = 'none';
   reset.style.display = 'none';
-  score.style.display = 'none';
   progress.hide();
+  counter.style.display = 'none';
 
   // Start quiz once start button is clicked
   function beginning() {
@@ -62,8 +63,8 @@ $(document).ready(function(){
       question.style.display = 'block';
       back.style.display = 'block';
       next.style.display = 'block';
-      score.style.display = 'block';
       progress.show();
+      counter.style.display = 'block';
     } else {
       alert('Enter your name');
     }
@@ -115,6 +116,11 @@ $(document).ready(function(){
         generated_label.appendChild(question_choices);
       }
 
+      var score_tag = document.createElement('p');
+      var score_text = document.createTextNode('Progress: '+count+' / '+questions.length);
+      score_tag.appendChild(score_text);
+      counter.appendChild(score_tag);
+
       // When go back a question, also adjust progress bar and total score
       if (answer[count]) {
         var num = parseInt(answer[count]);
@@ -122,38 +128,33 @@ $(document).ready(function(){
         answerChoice.checked = "checked";
         if (parseInt(answer[count]) === questions[count].answer) {
           totalCorrect--;
-          update_correct_progress_bar();
+          update_progress_bar();
         } else {
           totalMissed--;
-          update_missed_progress_bar();
+          update_progress_bar();
         }
       }
 
     } else {
       remove_all_childnodes(question);
-      remove_all_childnodes(score);
       next.style.display='none';
       back.style.display='none';
       reset.style.display = 'block';
       remove_all_childnodes(notification);
-      var final_score_tag = document.createElement('p');
+      remove_all_childnodes(counter);
+      var final_score_tag = document.createElement('h2');
       var final_score = document.createTextNode('Final score: ' + totalCorrect + ' / '+ questions.length);
       final_score_tag.appendChild(final_score);
       question.appendChild(final_score_tag);
+      progress.hide();
       restart_quiz();
     }
   }
 
-  // Update progress bar for correct answer
-  function update_correct_progress_bar(){
-    var percentage = (totalCorrect / questions.length)*100;
-    $('.progress-bar-success').attr('style', 'width: '+percentage+'%');
-  }
-
-  // Update rogress bar for wrong answer
-  function update_missed_progress_bar(){
-    var percentageMissed = (totalMissed / questions.length)*100;
-    $('.progress-bar-danger').attr('style', 'width: '+percentageMissed+'%');
+  // Update progress bar
+  function update_progress_bar(){
+    var percentage = (count / questions.length)*100;
+    $('.progress-bar-info').attr('style', 'width: '+percentage+'%');
   }
 
   // Evaluate answer and scores once NEXT button is clicked
@@ -166,43 +167,36 @@ $(document).ready(function(){
       var notification_text = document.createTextNode('Choose one');
       notification_tag.appendChild(notification_text);
       notification.appendChild(notification_tag);
+      $('#notification').children().fadeOut(1500);
     } // When the answer is correct
     else if (parseInt(answer[count]) === questions[count].answer) {
-      var notification_tag = document.createElement('p');
-      var notification_text = document.createTextNode('Correct!');
-      notification_tag.appendChild(notification_text);
-      notification.appendChild(notification_tag);
-      $('#notification').children().fadeOut(1500);
+      // var notification_tag = document.createElement('p');
+      // var notification_text = document.createTextNode('Correct!');
+      // notification_tag.appendChild(notification_text);
+      // notification.appendChild(notification_tag);
+      // $('#notification').children().fadeOut(1500);
 
       remove_all_childnodes(question);
-      remove_all_childnodes(score);
-      totalCorrect++;
-      var score_tag = document.createElement('p');
-      var score_text = document.createTextNode('Score: '+totalCorrect+' / '+questions.length);
-      score_tag.appendChild(score_text);
-      score.appendChild(score_tag);
-
+      remove_all_childnodes(counter);
+      
       count++;
-      update_correct_progress_bar();
+      totalCorrect++;
+      update_progress_bar();
       generate_question();
     } // When missed the answer
     else {
-      var notification_tag = document.createElement('p');
-      var notification_text = document.createTextNode('Wrong!');
-      notification_tag.appendChild(notification_text);
-      notification.appendChild(notification_tag);
-      $('#notification').children().fadeOut(1500);
+      // var notification_tag = document.createElement('p');
+      // var notification_text = document.createTextNode('Wrong!');
+      // notification_tag.appendChild(notification_text);
+      // notification.appendChild(notification_tag);
+      // $('#notification').children().fadeOut(1500);
 
       remove_all_childnodes(question);
-      remove_all_childnodes(score);
-      var score_tag = document.createElement('p');
-      var score_text = document.createTextNode('Score: '+totalCorrect+' / '+questions.length);
-      score_tag.appendChild(score_text);
-      score.appendChild(score_tag);
+      remove_all_childnodes(counter);
 
       count++;
       totalMissed++;
-      update_missed_progress_bar();
+      update_progress_bar();
       generate_question();
     }
   };
@@ -228,7 +222,7 @@ $(document).ready(function(){
       if (count >= 1) {
         count--;
         remove_all_childnodes(question);
-        remove_all_childnodes(score);
+        remove_all_childnodes(counter);
         generate_question();
       }
     }
