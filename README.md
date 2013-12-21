@@ -14,7 +14,7 @@ Build a JavaScript quiz application that will function as follows: <br>
 
 - DONE: Use jQuery to add animation (fade out the current question and fade in the next question).
 
-- Add a “Back” button to allow the user to go back and change her answer. The user can go back up to the first question. For the questions that the user has answered already, be sure to show the radio button selected, so that the user is not forced to answer the questions again, which she has completed.
+- DONE: Add a “Back” button to allow the user to go back and change her answer. The user can go back up to the first question. For the questions that the user has answered already, be sure to show the radio button selected, so that the user is not forced to answer the questions again, which she has completed.
 
 - Test the quiz on IE 8 and 9, and fix any bugs. This will give you a good workout ;)
 

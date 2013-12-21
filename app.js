@@ -1,4 +1,3 @@
-// Bunch of questions, choices, answers
 var questions = [
         {q: "What is the capital of Japan?",     choices: ["Osaka", "Tokyo", "Kyoto"],         answer: 1},
         {q: "What is the capital of Australia?", choices: ["Sydney", "Melbourne", "Canberra"], answer: 2},
@@ -11,10 +10,9 @@ var questions = [
         {q: "What is the capital of Azerbaijan?", choices: ["Ganja", "Sumgait", "Baku"],              answer: 2},
         {q: "What is the capital of Slovenia?",  choices: ["Ljubljana", "Maribor", "Celje"],         answer: 0}
     ];
-
 $(document).ready(function(){ 
- 
-  var count         = 0,
+  var questions,
+      count         = 0,
       answer        = new Array(10),
       totalMissed   = 0,
       totalCorrect  = 0,
@@ -26,14 +24,65 @@ $(document).ready(function(){
       notification = document.getElementById('notification'),
       reset        = document.getElementById('reset');
 
+  question.style.display = 'none';
+  back.style.display = 'none';
+  next.style.display = 'none';
+  reset.style.display = 'none';
+  score.style.display = 'none';
+  progress.hide();
+
+  function read_questions_from_JSON(){
+    // $.getJSON('questions.json', function(json) {
+    //   console.log(json.questions);
+    // });
+
+    // $.ajax({
+    //   type: 'GET',
+    //   url: '/questions.json',
+    //   dataType: 'json',
+    //   crossDomain: true,
+    //   success: function(data) {
+    //     questions = data.questions;
+    //     beginning();
+    //     generate_question();
+    //     evaluate_answer();
+    //     previous_question();
+    //   },
+    //   error: function(){
+    //     alert('Damnnnn... An error occured, try again!');
+    //   }
+    // });
+ 
+    // var newsURL = "questions.json";
+    // var xmlhttp;
+
+    // if (window.XMLHttpRequest) {
+    //     // code for IE7+, Firefox, Chrome, Opera, Safari
+    //     xmlhttp = new XMLHttpRequest();
+    // } else {
+    //     // code for IE6, IE5
+    //     xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+    // }
+    // xmlhttp.onreadystatechange = function() {
+    //     if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+    //         response = JSON.parse(xmlhttp.responseText);
+    //         questions = response;
+    //         console.log(questions);
+    //     }
+    // }
+    // xmlhttp.open("GET", newsURL, true);
+    // xmlhttp.send();
+  }
+  read_questions_from_JSON();
+
   // Click Start to start quiz
   function beginning() {
-    question.style.display = 'none';
-    back.style.display = 'none';
-    next.style.display = 'none';
-    reset.style.display = 'none';
-    score.style.display = 'none';
-    progress.hide();
+    // question.style.display = 'none';
+    // back.style.display = 'none';
+    // next.style.display = 'none';
+    // reset.style.display = 'none';
+    // score.style.display = 'none';
+    // progress.hide();
     var start_button = document.getElementById('start');
 
     start_button.onclick = function(e){
