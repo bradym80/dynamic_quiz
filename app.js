@@ -11,11 +11,11 @@ var questions = [
         {q: "What is the capital of Slovenia?",  choices: ["Ljubljana", "Maribor", "Celje"],         answer: 0}
     ];
 $(document).ready(function(){ 
-  var questions,
-      count         = 0,
+  var count         = 0,
       answer        = new Array(10),
       totalMissed   = 0,
       totalCorrect  = 0,
+      username_div = document.getElementById('username_div'),
       question     = document.getElementById('question'),
       back         = document.getElementById('back'),
       next         = document.getElementById('next'),
@@ -73,7 +73,7 @@ $(document).ready(function(){
     // xmlhttp.open("GET", newsURL, true);
     // xmlhttp.send();
   }
-  read_questions_from_JSON();
+  //read_questions_from_JSON();
 
   // Click Start to start quiz
   function beginning() {
@@ -83,10 +83,29 @@ $(document).ready(function(){
     // reset.style.display = 'none';
     // score.style.display = 'none';
     // progress.hide();
-    var start_button = document.getElementById('start');
 
+    var start_button = document.getElementById('start');
     start_button.onclick = function(e){
       e.preventDefault;
+      click_start_button();
+    };
+  }
+
+  function check_the_input(str) {
+    return str.replace(/^\s+|\s+$/g,'');
+  } 
+
+  function click_start_button(){
+    // Display username
+    sessionStorage.name = document.getElementById('username').value;
+    if (check_the_input(sessionStorage.name) !== '') {
+      var username = sessionStorage.name;
+      var username_area = document.createElement('p');
+      var question_choices = document.createTextNode('Welcome, ' + username);
+      username_div.appendChild(username_area);
+      username_area.appendChild(question_choices);
+
+      // Display questions
       var start_page = document.getElementById('start_page');
       start_page.style.display = 'none';
       question.style.display = 'block';
@@ -94,7 +113,9 @@ $(document).ready(function(){
       next.style.display = 'block';
       score.style.display = 'block';
       progress.show();
-    };
+    } else {
+      alert('Enter your name or ');
+    }
   }
 
   // remove all child nodes
@@ -141,7 +162,7 @@ $(document).ready(function(){
       }
       if (answer[count]) {
         var num = parseInt(answer[count]);
-        var answerChoice = document.getElementsByTagName('input')[num];
+        var answerChoice = document.getElementsByName('choice')[num];
         answerChoice.checked = "checked";
         if (parseInt(answer[count]) === questions[count].answer) {
           totalCorrect--;
@@ -233,8 +254,10 @@ $(document).ready(function(){
     };
 
     window.onkeyup = function(e){
-      if (e.keyCode == 13) {
+      if ((e.keyCode == 13) && (start_page.style.display == 'none')){
         answer_and_score();
+      } else if ((e.keyCode == 13) && (start_page.style.display != 'none')) {
+        click_start_button();
       }
     }      
   }
@@ -255,6 +278,7 @@ $(document).ready(function(){
   function restart_quiz(){
     reset.onclick = function(){
       location.reload(true);
+      sessionStorage.removeItem('name');
     };
   }
 

@@ -54,6 +54,14 @@ p {
   margin-top: 50px;
 }
 
+#username {
+  width: 200px;
+  height: 30px;
+  display: block;
+  text-align: center;
+  margin: auto;
+}
+
 button#start {
   font-family: inherit;
   font-size: 40px;
@@ -72,13 +80,19 @@ button#start:hover {
   background-color: rgba(111, 224, 169, 0.5);
 }
 
+#username_div {
+  margin-top: 30px;
+  margin-bottom: 0;
+  color: #003DF5;
+}
+
 #question {
   background-color: rgba(110, 238, 78, 0.7);
   border-radius: 20px;
   height: 180px;
   width: 600px;
   margin: auto;
-  margin-top: 30px;
+  margin-top: 10px;
   padding: 30px;
 }
 
