@@ -170,12 +170,6 @@ $(document).ready(function(){
       $('#notification').children().fadeOut(1500);
     } // When the answer is correct
     else if (parseInt(answer[count]) === questions[count].answer) {
-      // var notification_tag = document.createElement('p');
-      // var notification_text = document.createTextNode('Correct!');
-      // notification_tag.appendChild(notification_text);
-      // notification.appendChild(notification_tag);
-      // $('#notification').children().fadeOut(1500);
-
       remove_all_childnodes(question);
       remove_all_childnodes(counter);
       
@@ -185,12 +179,6 @@ $(document).ready(function(){
       generate_question();
     } // When missed the answer
     else {
-      // var notification_tag = document.createElement('p');
-      // var notification_text = document.createTextNode('Wrong!');
-      // notification_tag.appendChild(notification_text);
-      // notification.appendChild(notification_tag);
-      // $('#notification').children().fadeOut(1500);
-
       remove_all_childnodes(question);
       remove_all_childnodes(counter);
 
